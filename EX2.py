@@ -95,7 +95,6 @@ class Groupe:
         with open(chemin, newline='', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                print(row)
                 etudiant_data = {
                     'nom': row['_nom'],
                     'annee_naissance': int(row['_annee_naissance']),
@@ -103,7 +102,6 @@ class Groupe:
                     'connais_python': row['_connais_python'].lower() == 'true'
                 }
                 etudiants.append(Etudiant.from_dict(etudiant_data))
-        print("-" * 20)
         return cls(etudiants)
 
     def __str__(self):
