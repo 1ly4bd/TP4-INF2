@@ -166,7 +166,7 @@ def supprimer_fichiers(*chemins):
 # Exemples d'utilisation (mettre en commentaire la suppression des fichiers si pas besoin)
 if __name__ == "__main__":
 
-    # supprimer_fichiers(chemin_pickle, chemin_csv_charge)
+    supprimer_fichiers(chemin_pickle, chemin_csv_charge)
 
     if supp == False:
         e1 = Etudiant('Abdul', 2004, 3.0, True)
