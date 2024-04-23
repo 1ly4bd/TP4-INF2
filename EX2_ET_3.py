@@ -1,6 +1,7 @@
 import csv
 import pickle
 import os
+import time
 
 # Les noms des fichiers et du répertoire de travail peuvent être modifiés ici, le reste du code suivra
 
@@ -125,7 +126,9 @@ class Groupe:
                     # Ajoute un nouvel objet Etudiant à la liste des étudiants en utilisant les données du dictionnaire créé
                     etudiants.append(Etudiant.from_dict(etudiant_data))
                 except (ValueError, KeyError, TypeError) as e:
-                    print(f"Erreur lors du chargement de l'étudiant {row['_nom']}: {e}") # Les autres étudiants seront chargés
+                    print(f"Erreur lors du chargement de l'étudiant {row['_nom']}: {e}")
+                    # Les autres étudiants seront chargés, time.sleep pour que l'utilisateur voit l'erreur
+                    time.sleep(5)
         return cls(etudiants)
 
     def moyenne_du_groupe(self):
