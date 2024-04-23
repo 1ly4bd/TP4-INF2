@@ -23,9 +23,8 @@ def traiter_fichier_texte():
     # Vérifier si le fichier de résultat existe déjà
     fichier_existe = os.path.exists(chemin_resultat)
 
-    # Lire le contenu du fichier texte d'entrée
-    with open(chemin_entree, "r", encoding='utf-8') as fichier_entree:
-        contenu_original = fichier_entree.read()
+    with open(chemin_entree, "r", encoding='utf-8') as f:
+        contenu_original = f.read()
 
     # Ponctuations à supprimer
     ponctuations = (".", " !", ",", " ?")
@@ -41,10 +40,8 @@ def traiter_fichier_texte():
     # Diviser le contenu modifié en mots
     mots = contenu_modifie.split()
 
-    # Créer une liste contenant la longueur de chaque mot
     longueurs_mots = [str(len(mot)) for mot in mots]
 
-    # Créer un dictionnaire avec chaque mot et sa longueur
     dictionnaire_longueurs_mots = {}
     for mot in mots:
         dictionnaire_longueurs_mots[mot] = len(mot)
@@ -72,8 +69,6 @@ def traiter_fichier_texte():
         else:
             print(f"Fichier {chemin_resultat} créé avec succès.")
 
-
-# Fonction pour supprimer le fichier
 def supprimer_fichier(chemin):
     try:
         os.remove(chemin)
