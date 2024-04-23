@@ -141,7 +141,7 @@ def charger_groupe_pickle(nom_fichier):
     with open(nom_fichier, "rb") as f:
         return pickle.load(f)
 
-supp = False  #Pour suivre si la fonction supprimer_fichiers a été exécutée avec succès ou non.
+supp = False  #Suivre si supprimer_fichiers a été exécutée. Si oui, on exécute pas le reste.
 def supprimer_fichiers(*chemins):
     global supp  # Déclaration de supp comme variable globale
     supp = False  # Réinitialisation de supp à False à chaque appel de la fonction
@@ -161,7 +161,7 @@ if __name__ == "__main__":
 
     supprimer_fichiers(chemin_pickle, chemin_csv_charge)
 
-    if not os.path.exists(chemin_pickle) and not os.path.exists(chemin_csv_charge) and supp == False:
+    if supp == False:
         e1 = Etudiant('Abdul', 2004, 3.0, True)
         e2 = Etudiant('Juliette', 2001, 3.9, True)
         e3 = Etudiant('Matthieu', 2006, 4.5, False)
