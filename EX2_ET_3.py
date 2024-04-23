@@ -196,12 +196,11 @@ if __name__ == "__main__":
         print("-" * 50)
 
     """
-    Le choix entre le mode texte et le mode binaire pour le stockage de données dépend des exigences spécifiques de l'application. 
-    Les fichiers texte offrent une facilité de lecture et d'édition, ainsi qu'une interchangeabilité et une structure standardisée, 
-    mais peuvent occuper plus d'espace sur le disque et nécessiter des opérations de conversion lors du traitement des données. 
+    Nous pensons que le choix entre le mode texte et le mode binaire dépend. 
+    Les fichiers texte offrent une facilité de lecture et d'édition, mais peuvent occuper plus d'espace sur le disque 
+    et nécessiter des opérations de conversion lors du traitement des données. 
     En revanche, les fichiers binaires offrent une efficacité de stockage et de traitement supérieure, ainsi qu'une meilleure portabilité des données, 
-    mais sont illisibles pour les humains et peuvent être moins compatibles avec d'autres applications ou systèmes. 
-    Le choix entre les deux dépendra des compromis entre lisibilité, efficacité, portabilité et compatibilité requis par l'application.
+    mais sont illisibles pour les humains et peuvent être moins compatibles avec d'autres systèmes.  
     """
 
 
