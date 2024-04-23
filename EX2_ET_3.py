@@ -128,18 +128,22 @@ class Groupe:
                     print(f"Erreur lors du chargement de l'étudiant: {e}")
         return cls(etudiants)
 
+    def moyenne_du_groupe(self):
+        gpas = [etudiant.gpa for etudiant in self.etudiants]
+        return sum(gpas) / len(gpas) if len(gpas) > 0 else 0
+
     def __str__(self):
         tous_etudiants = "\n".join(str(etudiant) for etudiant in self.etudiants)
-        return f"\nEtudiants dans le groupe: \n{tous_etudiants}"
+        return f"\nEtudiants dans le groupe: \n{tous_etudiants}\nMoyenne du groupe: {self.moyenne_du_groupe():.2f}"
 
 def sauvegarder_groupe_pickle(groupe, nom_fichier):
     with open(nom_fichier, "wb") as f:
         pickle.dump(groupe, f)
 
-
 def charger_groupe_pickle(nom_fichier):
     with open(nom_fichier, "rb") as f:
         return pickle.load(f)
+
 
 supp = False  #Suivre si supprimer_fichiers a été exécutée. Si oui, on exécute pas le reste.
 def supprimer_fichiers(*chemins):
