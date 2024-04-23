@@ -125,7 +125,7 @@ class Groupe:
                     # Ajoute un nouvel objet Etudiant à la liste des étudiants en utilisant les données du dictionnaire créé
                     etudiants.append(Etudiant.from_dict(etudiant_data))
                 except (ValueError, KeyError, TypeError) as e:
-                    print(f"Erreur lors du chargement de l'étudiant: {e}")
+                    print(f"Erreur lors du chargement de l'étudiant {row['_nom']}: {e}") # Les autres étudiants seront chargés
         return cls(etudiants)
 
     def moyenne_du_groupe(self):
@@ -163,7 +163,7 @@ def supprimer_fichiers(*chemins):
 # Exemples d'utilisation (mettre en commentaire la suppression des fichiers si pas besoin)
 if __name__ == "__main__":
 
-    supprimer_fichiers(chemin_pickle, chemin_csv_charge)
+    # supprimer_fichiers(chemin_pickle, chemin_csv_charge)
 
     if supp == False:
         e1 = Etudiant('Abdul', 2004, 3.0, True)
