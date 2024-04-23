@@ -2,6 +2,23 @@ import csv
 import pickle
 import os
 
+# Les noms des fichiers et du répertoire de travail peuvent être modifiés ici, le reste du code suivra
+
+# Récupère le répertoire de travail actuel
+repertoire_travail = os.getcwd()
+
+chemin_csv_charge = os.path.join(repertoire_travail, "csvetudiants.csv")
+chemin_csv_a_charger = os.path.join(repertoire_travail, "csvacharger.csv")
+chemin_pickle = os.path.join(repertoire_travail, "picklegroupe.pkl")
+
+"""
+- csvetudiants.csv sera utilisé pour sauvegarder les données des étudiants.
+- csvacharger.csv sera utilisé pour charger et instancier des étudiants à partir d'un fichier CSV.
+- picklegroupe.pkl sera utilisé pour sauvegarder et charger les données des groupes au format pickle.
+
+Une fonction permet de les supprimer directement depuis ce script à la fin.
+"""
+
 class Etudiant:
     def __init__(self, nom: str, annee_naissance: int, gpa: float, connais_python: bool):
         self.nom = nom
@@ -81,15 +98,11 @@ class Groupe:
         self._etudiants = l
 
     def sauvegarder_csv(self, chemin):
-        # Ouvre un fichier CSV en mode écriture
         with open(chemin, "w", newline='', encoding='utf-8') as f:
-            # Vérifie s'il y a des étudiants à sauvegarder
             if self.etudiants:
-                # Récupère les noms de colonnes à partir du premier étudiant
                 fieldnames = self.etudiants[0].to_dict().keys()
-                # Crée un objet DictWriter pour écrire dans le fichier CSV avec les noms de colonnes récupérés
+                # Objet DictWriter pour écrire l'en-tête du fichier CSV avec les noms de colonnes
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
-                # Écrit l'en-tête du fichier CSV avec les noms de colonnes
                 writer.writeheader()
                 # Écrit chaque étudiant dans le fichier CSV en utilisant la méthode to_dict() pour obtenir ses données sous forme de dictionnaire
                 for student in self.etudiants:
@@ -97,28 +110,22 @@ class Groupe:
 
     @classmethod
     def charger_csv(cls, chemin):
-        etudiants = []  # Liste pour stocker les étudiants chargés depuis le fichier CSV
-        # Ouvre le fichier CSV en mode lecture
+        etudiants = []
         with open(chemin, newline='', encoding='utf-8') as f:
-            # Crée un lecteur CSV basé sur le fichier ouvert
             reader = csv.DictReader(f)
-            # Parcourt chaque ligne du fichier CSV
             for row in reader:
                 try:
-                    # Crée un dictionnaire contenant les données de l'étudiant à partir de la ligne actuelle du fichier CSV
                     etudiant_data = {
                         'nom': row['_nom'],
                         'annee_naissance': int(row['_annee_naissance']),
                         'gpa': float(row['_gpa']),
-                        # Rendre le test insensible à la casse peu importe si la valeur est écrite en majuscules, minuscules ou mixte
-                        'connais_python': row['_connais_python'].lower() == 'true' #
+                        # Rend le test insensible à la casse peu importe si la valeur est écrite en majuscules, minuscules ou mixte
+                        'connais_python': row['_connais_python'].lower() == 'true'
                     }
                     # Ajoute un nouvel objet Etudiant à la liste des étudiants en utilisant les données du dictionnaire créé
                     etudiants.append(Etudiant.from_dict(etudiant_data))
-                # Gère les erreurs potentielles lors de la création de l'objet Etudiant à partir des données du fichier CSV
                 except (ValueError, KeyError, TypeError) as e:
                     print(f"Erreur lors du chargement de l'étudiant: {e}")
-        # Retourne une nouvelle instance de la classe Groupe contenant les étudiants chargés depuis le fichier CSV
         return cls(etudiants)
 
     def __str__(self):
@@ -126,54 +133,67 @@ class Groupe:
         return f"\nEtudiants dans le groupe: \n{tous_etudiants}"
 
 def sauvegarder_groupe_pickle(groupe, nom_fichier):
-    # Ouvre un fichier binaire en mode écriture pour la sauvegarde des données en format pickle
     with open(nom_fichier, "wb") as f:
-        # Utilise pickle.dump() pour sauvegarder l'objet groupe dans le fichier
         pickle.dump(groupe, f)
 
 
 def charger_groupe_pickle(nom_fichier):
-    # Ouvre un fichier binaire en mode lecture pour charger les données en format pickle
     with open(nom_fichier, "rb") as f:
-        # Utilise pickle.load() pour charger l'objet groupe depuis le fichier
         return pickle.load(f)
 
+supp = False  #Pour suivre si la fonction supprimer_fichiers a été exécutée avec succès ou non.
+def supprimer_fichiers(*chemins):
+    global supp  # Déclaration de supp comme variable globale
+    supp = False  # Réinitialisation de supp à False à chaque appel de la fonction
+    for chemin in chemins:
+        try:
+            os.remove(chemin)
+            print(f"Fichier {chemin} supprimé avec succès.")
+        except FileNotFoundError:
+            print(f"Le fichier {chemin} n'existe pas.")
+        except Exception as e:
+            print(f"Une erreur s'est produite lors de la suppression du fichier {chemin}: {e}")
+    supp = True  # Modification de supp à True après la suppression des fichiers
 
-# Exemples d'utilisation
+
+# Exemples d'utilisation (mettre en commentaire la suppression des fichiers si pas besoin)
 if __name__ == "__main__":
-    e1 = Etudiant('Abdul', 2004, 3.0, True)
-    e2 = Etudiant('Juliette', 2001, 3.9, True)
-    e3 = Etudiant('Matthieu', 2006, 4.5, False)
-    e4 = Etudiant('Sandra', 2001, 4.0, True)
-    donnees_e5 = {'nom': 'Sarah', 'annee_naissance': 2004, 'gpa': 3.7, 'connais_python': False}
-    e5 = Etudiant.from_dict(donnees_e5)
-    donnees_e6 = {'nom': 'Pierre', 'annee_naissance': 2003, 'gpa': 3.0, 'connais_python': True}
-    e6 = Etudiant.from_dict(donnees_e6)
 
-    G1 = Groupe([e1, e2, e3, e4, e5, e6])
+    supprimer_fichiers(chemin_pickle, chemin_csv_charge)
 
-    # Chemin relatif pour les fichiers CSV et pickle
-    path = os.getcwd()
+    if not os.path.exists(chemin_pickle) and not os.path.exists(chemin_csv_charge) and supp == False:
+        e1 = Etudiant('Abdul', 2004, 3.0, True)
+        e2 = Etudiant('Juliette', 2001, 3.9, True)
+        e3 = Etudiant('Matthieu', 2006, 4.5, False)
+        e4 = Etudiant('Sandra', 2001, 4.0, True)
+        donnees_e5 = {'nom': 'Sarah', 'annee_naissance': 2004, 'gpa': 3.7, 'connais_python': False}
+        e5 = Etudiant.from_dict(donnees_e5)
+        donnees_e6 = {'nom': 'Pierre', 'annee_naissance': 2003, 'gpa': 3.0, 'connais_python': True}
+        e6 = Etudiant.from_dict(donnees_e6)
 
-    # Charger depuis un fichier CSV
-    G2 = Groupe.charger_csv(os.path.join(path, "csvacharger.csv"))
+        G1 = Groupe([e1, e2, e3, e4, e5, e6])
 
-    # Sauvegarder dans un fichier CSV
-    G1.sauvegarder_csv(os.path.join(path, "etudiants.csv"))
+        # Charger depuis un fichier CSV
+        G2 = Groupe.charger_csv(chemin_csv_a_charger)
 
-    # Sauvegarder et charger depuis un fichier pickle
-    sauvegarder_groupe_pickle(G1, os.path.join(path, "picklegroupe.pkl"))
-    G3 = charger_groupe_pickle(os.path.join(path, "picklegroupe.pkl"))
+        # Sauvegarder dans un fichier CSV
+        G1.sauvegarder_csv(chemin_csv_charge)
 
-    #Affichage d'étudiants
-    print(e1)
-    print(e4)
-    print(e6)
+        # Sauvegarder et charger depuis un fichier pickle, G3 sera identique à G1
+        sauvegarder_groupe_pickle(G1, chemin_pickle)
+        G3 = charger_groupe_pickle(chemin_pickle)
 
-    # Affichage des groupes
-    print(G1)
-    print(G2)
-    print(G3)
+        print("\nAffichage des étudiants:\n")
+        print(e1)
+        print(e4)
+        print(e6)
+        print("-" * 50)
+
+        print("\nAffichage des groupes:")
+        print(G1)
+        print(G2)
+        print(G3)
+        print("-" * 50)
 
     """
     Le choix entre le mode texte et le mode binaire pour le stockage de données dépend des exigences spécifiques de l'application. 
